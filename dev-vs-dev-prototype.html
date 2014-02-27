@@ -1,0 +1,68 @@
+<head>
+  <title>dev-vs-dev-prototype</title>
+</head>
+
+<body>
+  <h1>Dev vs Dev</h1>
+  <div id="spy-bg"></div>
+  {{> layout}}
+</body>
+
+<template name="layout">
+  {{yield}}
+</template>
+
+<template name="start">
+	<div id="game">
+		Total Games: {{games.count}}  
+		<a href="#" id="new_game" class="btn btn-default">Create New Game</a>
+	</div>
+</template>
+
+<template name="game">
+	<div id="game">
+	{{#if loading}}
+		Loading Game...
+	{{else}}
+		{{#if game}}
+			<p>Game id: {{game._id}}</p>
+			<p>Player 1: {{game.player1._id}}</p>
+			<p>Player 2: {{#unless game.player2}}{{#unless is_player}}<a href="#" id="player-2-join" class="btn btn-default">join</a>{{else}}Waiting on Player 2...{{/unless}}{{else}}{{game.player2._id}}{{/unless}}</p>
+
+			<p>Current Viewers: {{viewers.count}}</p>
+
+			{{#if game.game_on}}<p>GAME ON BABY!</p>{{/if}}
+			{{#unless game.game_completed}}<p>{{game.timer}}</p>{{/unless}}
+			{{#unless game.game_on}}
+				{{#unless game.game_completed}}
+				 	{{#if is_player}}<a href="#" id="start_game" class="btn btn-default">start</a>{{/if}}
+				{{else}}
+				 	<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
+				{{/unless}}
+			{{/unless}}
+		{{else}}
+			Doesn't look like this game exists partner.
+			<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
+		{{/if}}
+	{{/if}}
+	</div>
+</template>
+
+
+
+
+<template name="hello">
+  <h1>Dev vs Dev</h1>
+  Hello <input type="text" value="{{player.name}}" />
+
+  <input type="button" value="Click" />
+</template>
+
+<template name="players">
+  <p>Total Players Ever - {{players.count}}</p>
+  <ul>
+  	{{#each players}}
+  		<li>{{name}}:: last played - {{last_played}}</li>
+  	{{/each}}
+  </ul>
+</template>

@@ -1,0 +1,16 @@
+#spy-bg {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top:0;
+	left: 0;
+	background: url('images/spy-vs-spy.svg') center right no-repeat;
+	background-size: auto 90%;
+	opacity: 1;
+	z-index: 1;
+}
+
+#game {
+	position: relative;
+	z-index: 2;
+}

@@ -8,14 +8,14 @@
 
 Install Meteorite.
 
-    $ npm install -g meteorite
+	$ npm install -g meteorite
 
 ### setup
 
 Remove Autopublish package
 	
-		$ mrt remove autopublish
+	$ mrt remove autopublish
 
 Install Packages
 
-		$ mrt install
+	$ mrt install

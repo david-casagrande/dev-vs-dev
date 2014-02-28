@@ -31,7 +31,11 @@
 
 			<p>Current Viewers: {{viewers.count}}</p>
 
-			{{#if game.game_on}}<p>GAME ON BABY!</p>{{/if}}
+			{{#if game.game_on}}
+			<p>GAME ON BABY!</p>
+  		<textarea></textarea>
+
+			{{/if}}
 			{{#unless game.game_completed}}<p>{{game.timer}}</p>{{/unless}}
 			{{#unless game.game_on}}
 				{{#unless game.game_completed}}
@@ -47,9 +51,6 @@
 	{{/if}}
 	</div>
 </template>
-
-
-
 
 <template name="hello">
   <h1>Dev vs Dev</h1>

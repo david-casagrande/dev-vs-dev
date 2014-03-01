@@ -14,3 +14,12 @@
 	position: relative;
 	z-index: 2;
 }
+
+#answer {
+	font-size: .875em;
+	margin-bottom: 1em;
+}
+
+#done {
+	margin-bottom: 1em;
+}

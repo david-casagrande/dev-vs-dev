@@ -23,9 +23,10 @@ if (Meteor.isClient) {
   };  
 
   Template.start.events({
-    'click #new_game': function (e) {
-      var game = Games.insert({ timer: 30, player1: Players.findOne({ _id: Session.get('playerId') }) });
-      Router.go('game', {_id: game});
+    'click #new_game': function () {
+      Meteor.call('newGame', Session.get('playerId'), function(error, result){
+        if(result){ Router.go('game', { _id: result }); }
+      });
       return false;
     }
   });
@@ -42,8 +43,12 @@ if (Meteor.isClient) {
     return Session.get('loading_games');
   };
 
-  Template.game.is_player = function(){
+  Template.game.player1 = function(){
     return Games.findOne({ _id: Session.get('current_game'), 'player1._id': Session.get('playerId') });
+  }; 
+
+  Template.game.player2 = function(){
+    return Games.findOne({ _id: Session.get('current_game'), 'player2._id': Session.get('playerId') });
   }; 
 
   Template.game.viewers = function(){
@@ -57,15 +62,30 @@ if (Meteor.isClient) {
     },
 
     'click #player-2-join': function(){
-      var game = Games.findOne({ _id: Session.get('current_game') });
-      if(game.player1._id !== Session.get('playerId')) {
-        var player2 = Players.findOne({ _id: Session.get('playerId') });
-        if(player2) {
-          Games.update(Session.get('current_game'), { $set: { player2: player2 } })
-        }
+      Meteor.call('joinGame', { game: Session.get('current_game'), player: Session.get('playerId') });
+      return false;
+    },
+
+    'keydown #answer': function(e){
+      var keyCode = e.keyCode || e.which;
+      if(keyCode === 9) {
+        e.preventDefault();
+        e.target.value += '\t';
       }
+    },
+
+    'click #done': function(e){
+      var answer = document.getElementById('answer'),
+          data = {
+            answer:   answer.value, 
+            gameId:   Session.get('current_game'),
+            playerId: Session.get('playerId')
+          };
+      Meteor.call('saveAnswer', data);
       return false;
     }
+
+  
   });
 
   Meteor.startup(function () {
@@ -122,6 +142,13 @@ if (Meteor.isServer) {
       }
     },
 
+    newGame: function(player1){
+      player1 = Players.findOne({ _id: player1 });
+      var game = Games.insert({ timer: 240, player1: player1 });
+      console.log(game);
+      return game;
+    },
+
     startGame: function(gameId){
       
       var game        = Games.findOne({ _id: gameId }),
@@ -142,7 +169,49 @@ if (Meteor.isServer) {
       Games.update(gameId, { $set: { game_on: true } } );
       reduceTime();
 
-    }
+    },
+
+    joinGame: function(data){
+      var game = Games.findOne({ _id: data.game });
+
+      if(game.player1._id !== data.player) {
+        var player2 = Players.findOne({ _id: data.player });
+        if(player2) {
+          Games.update(data.game, { $set: { player2: player2 } })
+        }
+      }
+
+    },
+
+    saveAnswer: function(data){
+      var game      = Games.findOne({ _id: data.gameId }),
+          isPlayer1 = game.player1._id === data.playerId ? true : false,
+          isPlayer2 = game.player2._id === data.playerId ? true : false,
+          answer    = null;
+
+      var checkAnswer = function(){
+        var a = eval(data.answer);
+        return a[0] === 0 && a[9] === 9 && a.length === 10;
+      }
+
+      if(isPlayer1) {
+        answer = { 'answer1' : data.answer };
+        if(!game.winner && checkAnswer()) {
+          answer.winner = 'player1';
+        }
+      }
+      if(isPlayer2) {
+        answer = { 'answer2' : data.answer };
+        if(!game.winner && checkAnswer()) {
+          answer.winner = 'player2';
+        } 
+      }
+
+      if(answer){
+        Games.update(data.gameId, { $set: answer } );
+      }
+
+    }    
 
   });
 

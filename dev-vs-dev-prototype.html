@@ -25,20 +25,22 @@
 		Loading Game...
 	{{else}}
 		{{#if game}}
+			<p>WINNER IS: {{game.winner}}</p>
 			<p>Game id: {{game._id}}</p>
 			<p>Player 1: {{game.player1._id}}</p>
-			<p>Player 2: {{#unless game.player2}}{{#unless is_player}}<a href="#" id="player-2-join" class="btn btn-default">join</a>{{else}}Waiting on Player 2...{{/unless}}{{else}}{{game.player2._id}}{{/unless}}</p>
+			<p>Player 2: {{#unless game.player2}}{{#unless player1}}<a href="#" id="player-2-join" class="btn btn-default">join</a>{{else}}Waiting on Player 2...{{/unless}}{{else}}{{game.player2._id}}{{/unless}}</p>
 
 			<p>Current Viewers: {{viewers.count}}</p>
-
-			{{#if game.game_on}}
-			<p>GAME ON BABY!</p>
-  		<textarea></textarea>
-
-			{{/if}}
-			{{#unless game.game_completed}}<p>{{game.timer}}</p>{{/unless}}
+			
+			{{!#if game.game_on}}
+				<p>GAME ON BABY!</p>
+				<p>Time Remaining: {{game.timer}}</p>
+				<textarea id="answer" class="form-control" rows="3">{{player1.answer}}</textarea>
+				<a href="#" id="done" class="btn btn-default">DONE!</a>
+			{{!/if}}
 			{{#unless game.game_on}}
 				{{#unless game.game_completed}}
+					{{is_player}}
 				 	{{#if is_player}}<a href="#" id="start_game" class="btn btn-default">start</a>{{/if}}
 				{{else}}
 				 	<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>

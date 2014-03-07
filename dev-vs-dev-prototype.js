@@ -30,11 +30,11 @@ if (Meteor.isClient) {
       return false;
     }
   });
-
+/*
   Template.start.games = function(){
     return Games.find({});
   };
-
+*/
   Template.game.game = function(){
     return Games.findOne({ _id: Session.get('current_game') });
   };

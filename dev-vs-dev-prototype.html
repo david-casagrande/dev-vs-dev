@@ -3,54 +3,57 @@
 </head>
 
 <body>
-  <h1>Dev vs Dev</h1>
+  <h1 class="title">dev v<span class="reverse">dev s</span></h1>
   <div id="spy-bg"></div>
+	<div class="bg-stripe left"></div>
+	<div class="bg-stripe right"></div>
   {{> layout}}
 </body>
 
 <template name="layout">
-  {{yield}}
+ {{yield}}
 </template>
 
 <template name="start">
 	<div id="game">
-		Total Games: {{games.count}}  
-		<a href="#" id="new_game" class="btn btn-default">Create New Game</a>
+		<a href="#" id="new-game" class="game-btn">Start</a>
 	</div>
 </template>
 
 <template name="game">
 	<div id="game">
-	{{#if loading}}
-		Loading Game...
-	{{else}}
-		{{#if game}}
-			<p>WINNER IS: {{game.winner}}</p>
-			<p>Game id: {{game._id}}</p>
-			<p>Player 1: {{game.player1._id}}</p>
-			<p>Player 2: {{#unless game.player2}}{{#unless player1}}<a href="#" id="player-2-join" class="btn btn-default">join</a>{{else}}Waiting on Player 2...{{/unless}}{{else}}{{game.player2._id}}{{/unless}}</p>
+		<div class="col-sm-6">
+			{{#if loading}}
+				Loading Game...
+			{{else}}
+				{{#if game}}
+					<p>WINNER IS: {{game.winner}}</p>
+					<p>Game id: {{game._id}}</p>
+					<p>Player 1: {{game.player1._id}}</p>
+					<p>Player 2: {{#unless game.player2}}{{#unless player1}}<a href="#" id="player-2-join" class="btn btn-default">join</a>{{else}}Waiting on Player 2...{{/unless}}{{else}}{{game.player2._id}}{{/unless}}</p>
 
-			<p>Current Viewers: {{viewers.count}}</p>
-			
-			{{!#if game.game_on}}
-				<p>GAME ON BABY!</p>
-				<p>Time Remaining: {{game.timer}}</p>
-				<textarea id="answer" class="form-control" rows="3">{{player1.answer}}</textarea>
-				<a href="#" id="done" class="btn btn-default">DONE!</a>
-			{{!/if}}
-			{{#unless game.game_on}}
-				{{#unless game.game_completed}}
-					{{is_player}}
-				 	{{#if is_player}}<a href="#" id="start_game" class="btn btn-default">start</a>{{/if}}
+					<p>Current Viewers: {{viewers.count}}</p>
+					
+					{{!#if game.game_on}}
+						<p>GAME ON BABY!</p>
+						<p>Time Remaining: {{game.timer}}</p>
+						<textarea id="answer" class="form-control" rows="3">{{player1.answer}}</textarea>
+						<a href="#" id="done" class="btn btn-default">DONE!</a>
+					{{!/if}}
+					{{#unless game.game_on}}
+						{{#unless game.game_completed}}
+							{{is_player}}
+						 	{{#if is_player}}<a href="#" id="start_game" class="btn btn-default">start</a>{{/if}}
+						{{else}}
+						 	<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
+						{{/unless}}
+					{{/unless}}
 				{{else}}
-				 	<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
-				{{/unless}}
-			{{/unless}}
-		{{else}}
-			Doesn't look like this game exists partner.
-			<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
-		{{/if}}
-	{{/if}}
+					Doesn't look like this game exists partner.
+					<a href="{{pathFor 'start'}}" class="btn btn-default">back</a>
+				{{/if}}
+			{{/if}}
+		</div>
 	</div>
 </template>
 
